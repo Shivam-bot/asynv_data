@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <title>User</title>
+  </head>
+<body>
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone No.</th>
+            </tr>
+          </thead>
+          <tbody id = "user_table">
+          {% for user in user_info %}
+
+          <tr>
+               <td>{{user.id}}</td>
+               <td>
+                    {{user.first_name}}
+               </td>
+               <td>user
+                   {{user.last_name}}
+               </td>
+               <td>
+               {{user.email}}
+
+               </td>
+               <td>
+               {{user.mobno}}
+               </td>
+            </tr>
+
+          {% endfor %}
+          </tbody>
+      </table>
+
+      <script>
+
+let socket = new WebSocket("ws://localhost:8000/ws/test/myuser");
+<!--socket.headers("Authorization":"Bearer Asdfgr");-->
+socket.onopen = function(e) {
+  alert("[open] Connection established");
+  alert("Sending to server");
+
+  socket.send(("mykey", "my_value"));
+};
+
+socket.onmessage = function(event) {
+<!--  alert(`[message] Data received from server: ${event.data}`);-->
+<!--   var asd = JSON.dumps(event.data);-->
+   var data_json = JSON.parse(event.data)
+
+  if(data_json['payloads'] != undefined){
+         var html = `
+            <tr>
+               <td>${data_json.payloads.id}</td>
+               <td>
+                    ${data_json.payloads.first_name}
+               </td>
+               <td>
+                   ${data_json.payloads.last_name}
+               </td>
+               <td>
+               ${data_json.payloads.email}
+
+               </td>
+               <td>
+               ${data_json.payloads.mob_no}
+               </td>
+            </tr>
+            `
+        document.getElementById("user_table").innerHTML += html
+       };
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+  } else {
+    // e.g. server process killed or network down
+    // event.code is usually 1006 in this case
+    alert('[close] Connection died');
+  }
+};
+
+socket.onerror = function(error) {
+  alert(`[error] ${error.message}`);
+};
+
+
+<!--  window.addEventListener("load", init, false);-->
+
+
+</script>
+</body>
+</html>

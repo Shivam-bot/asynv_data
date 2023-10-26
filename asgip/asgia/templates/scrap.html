@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+var html = "
+            <tr>
+               <td>{{data_json['payloads']['id']}}</td>
+               <td>
+                    {{data_json['payloads']['first_name']}}
+               </td>
+               <td>
+                   {{data_json['payloads']['last_name']}}
+               </td>
+               <td>
+               {{data_json['payloads']['email']}}
+
+               </td>
+               <td>
+               {{data_json['payloads']['mob_no']}}
+
+               </td>
+            </tr>
+            "
+        document.getElementById("user_table").innerHTML += html
+
+</body>
+</html>
+
